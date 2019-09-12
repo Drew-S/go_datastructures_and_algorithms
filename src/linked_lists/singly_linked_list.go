@@ -31,8 +31,8 @@ func (s *SinglyLinkedList) Insert(key int, value interface{}) {
 	} else {
 		var current *link = s.head
 		for (*current).next != nil {
-			if (*current).key == key {
-				(*current).value = &value
+			if (*(*current).next).key == key {
+				(*(*current).next).value = &value
 				return
 			} else if (*(*current).next).key > key {
 				(*current).next = &link{key: key, value: &value, next: (*current).next}
@@ -110,19 +110,21 @@ func (s *SinglyLinkedList) Len() int {
 // Remove an element by with its key
 // Example:
 //   list.Remove(1)
-func (s *SinglyLinkedList) Remove(key int) {
+func (s *SinglyLinkedList) Remove(key int) (interface{}, error) {
 	if s.head == nil {
-		return
+		return nil, errors.New("Empty list")
 	}
 	var current *link = s.head
 	for (*current).next != nil {
 		if (*(*current).next).key == key {
+			var value interface{} = *(*(*current).next).value
 			(*current).next = (*(*current).next).next
 			s.len--
-			return
+			return value, nil
 		}
 		current = (*current).next
 	}
+	return nil, errors.New("Value not found")
 }
 
 // Find the index of a value given the value
@@ -176,11 +178,4 @@ func (s *SinglyLinkedList) String() string {
 	}
 	str += "tail }"
 	return str
-}
-
-// Prints the linked list to the terminal same as String() above
-// Example:
-//   list.Println()
-func (s *SinglyLinkedList) Println() {
-	fmt.Println(s.String())
 }
