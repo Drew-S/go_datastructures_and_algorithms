@@ -1,13 +1,14 @@
 package singlylinkedlist
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 )
 
 type link struct {
-	object *interface{}
-	next *link
+	key   int
+	value *interface{}
+	next  *link
 }
 
 // Singly Linked List of elements
@@ -17,23 +18,32 @@ type link struct {
 //   list := SinglyLinkedList{}
 type SinglyLinkedList struct {
 	head *link
-	len int
+	len  int
 }
 
-// Append an item to the end of the list, just before the tail
+// Insert an item to the end of the list, just before the tail
 // Example:
-//    list.Append("item")
-func (s *SinglyLinkedList) Append(object interface{}) {
+//    list.Insert(2, "item")
+func (s *SinglyLinkedList) Insert(key int, value interface{}) {
 	if s.head == nil {
-		s.head = &link{ next: &link{ object: &object }}
+		s.head = &link{key: -1, next: &link{key: key, value: &value}}
+		s.len++
 	} else {
 		var current *link = s.head
 		for (*current).next != nil {
+			if (*current).key == key {
+				(*current).value = &value
+				return
+			} else if (*(*current).next).key > key {
+				(*current).next = &link{key: key, value: &value, next: (*current).next}
+				s.len++
+				return
+			}
 			current = (*current).next
 		}
-		(*current).next = &link{ object: &object }
+		(*current).next = &link{key: key, value: &value}
+		s.len++
 	}
-	s.len++
 }
 
 // Remove the last item from the list
@@ -47,26 +57,13 @@ func (s *SinglyLinkedList) Pop() (interface{}, error) {
 		return nil, errors.New("Is empty")
 	}
 	var current *link = s.head
-	var prev *link = current
-	for (*current).next != nil {
-		prev = current
+	for (*(*current).next).next != nil {
 		current = (*current).next
 	}
-	(*prev).next = nil
+	var value interface{} = *(*(*current).next).value
+	(*current).next = nil
 	s.len--
-	return *(*current).object, nil
-}
-
-// Add an item to the front of the list
-// Example:
-//    list.Unshift("item")
-func (s *SinglyLinkedList) Unshift(object interface{}) {
-	if s.head == nil {
-		s.head = &link{ next: &link{ object: &object }}
-	} else {
-		(*s.head).next = &link{ object: &object, next: (*s.head).next }
-	}
-	s.len++
+	return value, nil
 }
 
 // Remove an item from the front of the list
@@ -82,7 +79,7 @@ func (s *SinglyLinkedList) Shift() (interface{}, error) {
 	var current *link = (*s.head).next
 	(*s.head).next = (*current).next
 	s.len--
-	return *(*current).object, nil
+	return *(*current).value, nil
 }
 
 // Iterate over the list,
@@ -96,7 +93,7 @@ func (s *SinglyLinkedList) Iter() chan *interface{} {
 		var current *link = s.head
 		for (*current).next != nil {
 			current = (*current).next
-			ch <- (*current).object
+			ch <- (*current).value
 		}
 		close(ch)
 	}()
@@ -110,23 +107,21 @@ func (s *SinglyLinkedList) Len() int {
 	return s.len
 }
 
-// Remove an element by its index (starting at 0)
+// Remove an element by with its key
 // Example:
 //   list.Remove(1)
-func (s *SinglyLinkedList) Remove(index int) {
+func (s *SinglyLinkedList) Remove(key int) {
 	if s.head == nil {
 		return
 	}
 	var current *link = s.head
-	var i int
 	for (*current).next != nil {
-		if index == i {
+		if (*(*current).next).key == key {
 			(*current).next = (*(*current).next).next
 			s.len--
 			return
 		}
 		current = (*current).next
-		i++
 	}
 }
 
@@ -136,20 +131,18 @@ func (s *SinglyLinkedList) Remove(index int) {
 //   if err != nil {
 //     // log error
 //   }
-func (s *SinglyLinkedList) Find(object interface{}) (int, error) {
+func (s *SinglyLinkedList) Find(value interface{}) (int, error) {
 	if s.head == nil {
 		return -1, errors.New("Is empty")
 	}
 	var current *link = s.head
-	var i int = -1
 	for (*current).next != nil {
-		i++
 		current = (*current).next
-		if *(*current).object == object {
-			return i, nil
+		if *(*current).value == value {
+			return (*current).key, nil
 		}
 	}
-	return -1, errors.New(fmt.Sprintf("Cannot find '%v'", object))
+	return -1, errors.New(fmt.Sprintf("Cannot find '%v'", value))
 }
 
 // Return the list as an array
@@ -164,7 +157,7 @@ func (s *SinglyLinkedList) ToArray() ([]interface{}, error) {
 	var i int
 	for (*current).next != nil {
 		current = (*current).next
-		ret[i] = *(*current).object
+		ret[i] = *(*current).value
 		i++
 	}
 	return ret, nil
@@ -179,7 +172,7 @@ func (s *SinglyLinkedList) String() string {
 	str += "head->"
 	for (*current).next != nil {
 		current = (*current).next
-		str += fmt.Sprintf("%v->", *(*current).object) 
+		str += fmt.Sprintf("%v->", *(*current).value)
 	}
 	str += "tail }"
 	return str

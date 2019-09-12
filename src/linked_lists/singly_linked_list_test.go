@@ -11,25 +11,25 @@ func Test_Init(t *testing.T) {
 	}
 }
 
-func Test_Append(t *testing.T) {
+func Test_Insert(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test")
+	l.Insert(1, "test")
 	if l.head == nil {
 		t.Errorf("Should: head != nil")
 	}
 	if (*l.head).next == nil {
 		t.Errorf("Should: head.next != nil")
 	}
-	if *(*(*l.head).next).object != "test" {
-		t.Errorf("Should: head.next == 'test' got '%v'", *(*(*l.head).next).object)
+	if *(*(*l.head).next).value != "test" {
+		t.Errorf("Should: head.next == 'test' got '%v'", *(*(*l.head).next).value)
 	}
 }
 
 func Test_Pop(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
-	l.Append("test3")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
+	l.Insert(2, "test3")
 	if l.len != 3 {
 		t.Errorf("Should have len of 3 not '%d'", l.len)
 	}
@@ -45,25 +45,11 @@ func Test_Pop(t *testing.T) {
 	}
 }
 
-func Test_Unshift(t *testing.T) {
-	l := SinglyLinkedList{}
-	l.Unshift("test")
-	if l.head == nil {
-		t.Errorf("Should: head != nil")
-	}
-	if (*l.head).next == nil {
-		t.Errorf("Should: head.next != nil")
-	}
-	if *(*(*l.head).next).object != "test" {
-		t.Errorf("Should: head.next == 'test' got '%v'", *(*(*l.head).next).object)
-	}
-}
-
 func Test_Shift(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
-	l.Append("test3")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
+	l.Insert(2, "test3")
 	if l.len != 3 {
 		t.Errorf("Should have len of 3 not '%d'", l.len)
 	}
@@ -81,11 +67,11 @@ func Test_Shift(t *testing.T) {
 
 func Test_Iter(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append(1)
-	l.Append(2)
-	l.Append(3)
-	l.Append(4)
-	l.Append(5)
+	l.Insert(1, 1)
+	l.Insert(2, 2)
+	l.Insert(3, 3)
+	l.Insert(4, 4)
+	l.Insert(5, 5)
 	var i int = 1
 	for j := range l.Iter() {
 		if *j != i {
@@ -97,8 +83,8 @@ func Test_Iter(t *testing.T) {
 
 func Test_Len(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
 	if l.Len() != 2 {
 		t.Errorf("Expected Len() == 2 not '%d'", l.Len())
 	}
@@ -106,11 +92,11 @@ func Test_Len(t *testing.T) {
 
 func Test_Remove(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
-	l.Append("test3")
-	l.Append("test4")
-	l.Append("test5")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
+	l.Insert(2, "test3")
+	l.Insert(3, "test4")
+	l.Insert(4, "test5")
 	l.Remove(2)
 	for i := range l.Iter() {
 		if *i == "test3" {
@@ -118,27 +104,27 @@ func Test_Remove(t *testing.T) {
 		}
 	}
 	if l.len != 4 {
-		t.Errorf("Expected length to be 4, not '%d'", l.len)
+		t.Errorf("Expected length to be 4, not %d", l.len)
 	}
 }
 
 func Test_Find(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
 	i, err := l.Find("test2")
 	if err != nil {
 		t.Errorf("There should be no error, got '%v'", err)
 	}
 	if i != 1 {
-		t.Errorf("Expected to get index 1 not '%d'", i)
+		t.Errorf("Expected to get key 1 not '%d'", i)
 	}
 }
 
 func Test_ToArray(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
 	a, err := l.ToArray()
 	if err != nil {
 		t.Errorf("Expected error to be nil got '%v'", err)
@@ -153,11 +139,10 @@ func Test_ToArray(t *testing.T) {
 
 func Test_String(t *testing.T) {
 	l := SinglyLinkedList{}
-	l.Append("test1")
-	l.Append("test2")
+	l.Insert(0, "test1")
+	l.Insert(1, "test2")
 	var output string = "SinglyLinkedList{ head->test1->test2->tail }"
 	if l.String() != output {
 		t.Errorf("Expected '%s' got '%v'", output, l.String())
 	}
 }
-
