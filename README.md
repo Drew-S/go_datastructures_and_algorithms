@@ -4,5 +4,8 @@
 
 A list of data structures and algorithms written in golang
 
-- [Singly Linked List](src/linked_lists/singly_linked_list/singly_linked_list.go)
-- [Doubly Linked List](src/linked_lists/doubly_linked_list/doubly_linked_list.go)
+- Linked Lists
+    - [Singly Linked List](src/linked_lists/singly_linked_list/singly_linked_list.go)
+    - [Doubly Linked List](src/linked_lists/doubly_linked_list/doubly_linked_list.go)
+- Trees
+    - [Binary Search Tree](src/trees/binary_search_tree/binary_search_tree.go)
