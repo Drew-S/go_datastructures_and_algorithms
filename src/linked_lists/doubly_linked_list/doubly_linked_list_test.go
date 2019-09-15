@@ -23,8 +23,8 @@ func Test_Insert1(t *testing.T) {
 	if l.head.next == nil {
 		t.Errorf("Should: head.next != nil")
 	}
-	if *l.head.next.value != "test" {
-		t.Errorf("Should: head.next == 'test' got '%v'", *l.head.next.value)
+	if l.head.next.value != "test" {
+		t.Errorf("Should: head.next == 'test' got '%v'", l.head.next.value)
 	}
 }
 func Test_Insert2(t *testing.T) {
@@ -38,8 +38,8 @@ func Test_Insert2(t *testing.T) {
 	if l.head.next == nil {
 		t.Errorf("Should: head.next != nil")
 	}
-	if *l.head.next.next.value != "test1" {
-		t.Errorf("Should: head.next.next == 'test1' got '%v'", *l.head.next.next.value)
+	if l.head.next.next.value != "test1" {
+		t.Errorf("Should: head.next.next == 'test1' got '%v'", l.head.next.next.value)
 	}
 }
 func Test_Insert3(t *testing.T) {
@@ -52,15 +52,15 @@ func Test_Insert3(t *testing.T) {
 	if l.head.next == nil {
 		t.Errorf("Should: head.next != nil")
 	}
-	if *l.head.next.next.value != "test1" {
-		t.Errorf("Should: head.next.next == 'test1' got '%v'", *l.head.next.value)
+	if l.head.next.next.value != "test1" {
+		t.Errorf("Should: head.next.next == 'test1' got '%v'", l.head.next.value)
 	}
 	if l.len != 2 {
 		t.Errorf("Should have 2 elements, got %v", l.len)
 	}
 	l.Insert(2, "test2")
-	if *l.head.next.next.value != "test2" {
-		t.Errorf("Should: head.next.next == 'test2' got '%v'", *l.head.next.value)
+	if l.head.next.next.value != "test2" {
+		t.Errorf("Should: head.next.next to be 'test2' got '%v'", l.head.next.next.value)
 	}
 	if l.len != 2 {
 		t.Errorf("Should have 2 elements, got %v", l.len)

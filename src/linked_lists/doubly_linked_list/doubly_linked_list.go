@@ -7,12 +7,13 @@ import (
 
 type link struct {
 	key   int
-	value *interface{}
+	value interface{}
 	next  *link
 	prev  *link
 }
 
-// Doubly Linked List of elements
+// DoublyLinkedList ...
+//   Create a linked list of any (mix) of items
 // head <-> item 1 <-> item 2 <-> ... <-> tail
 // Can store any type of item.
 // Example:
@@ -29,7 +30,7 @@ type DoublyLinkedList struct {
 func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 	if d.head == nil { // if list empty create head, append after head
 		d.tail = &link{key: -1}
-		d.head = &link{key: -1, prev: d.tail, next: &link{key: key, value: &value, next: d.tail}}
+		d.head = &link{key: -1, prev: d.tail, next: &link{key: key, value: value, next: d.tail}}
 		d.head.next.prev = d.head
 		d.tail.next = d.head
 		d.tail.prev = d.head.next
@@ -39,12 +40,12 @@ func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 		var current *link = d.head.next
 		for *current != *d.tail {
 			if current.key == key { // keys match update value
-				current.value = &value
+				current.value = value
 				return
 
 			} else if current.key > key { // current key larger, place before
 				var prev *link = current.prev
-				prev.next = &link{key: key, value: &value, prev: prev, next: current}
+				prev.next = &link{key: key, value: value, prev: prev, next: current}
 				current.prev = prev.next
 				d.len++
 				return
@@ -53,7 +54,7 @@ func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 			current = current.next
 		}
 		current = current.prev
-		current.next = &link{key: key, value: &value, prev: current, next: d.tail}
+		current.next = &link{key: key, value: value, prev: current, next: d.tail}
 		d.tail.prev = current.next
 		d.len++
 	}
@@ -69,7 +70,7 @@ func (d *DoublyLinkedList) Pop() (interface{}, error) {
 	if d.tail == nil {
 		return nil, errors.New("Is empty")
 	}
-	var value interface{} = *d.tail.prev.value
+	var value interface{} = d.tail.prev.value
 	var prev *link = d.tail.prev.prev
 	prev.next = d.tail
 	d.tail.prev = prev
@@ -87,7 +88,7 @@ func (d *DoublyLinkedList) Shift() (interface{}, error) {
 	if d.head == nil {
 		return nil, errors.New("Is empty")
 	}
-	var value interface{} = *d.head.next.value
+	var value interface{} = d.head.next.value
 	var next *link = d.head.next.next
 	d.head.next = next
 	next.prev = d.head
@@ -106,7 +107,7 @@ func (d *DoublyLinkedList) Iter() chan *interface{} {
 		var current *link = d.head
 		for *current.next != *d.tail {
 			current = current.next
-			ch <- current.value
+			ch <- &current.value
 		}
 		close(ch)
 	}()
@@ -124,7 +125,7 @@ func (d *DoublyLinkedList) IterReverse() chan *interface{} {
 		var current *link = d.tail
 		for *current.prev != *d.head {
 			current = current.prev
-			ch <- current.value
+			ch <- &current.value
 		}
 		close(ch)
 	}()
@@ -148,7 +149,7 @@ func (d *DoublyLinkedList) Remove(key int) (interface{}, error) {
 	var current *link = d.head
 	for *current.next != *d.tail {
 		if current.next.key == key {
-			var value interface{} = *current.next.value
+			var value interface{} = current.next.value
 			current.next = current.next.next
 			d.len--
 			return value, nil
@@ -171,7 +172,7 @@ func (d *DoublyLinkedList) Find(value interface{}) (int, error) {
 	var current *link = d.head
 	for *current.next != *d.tail {
 		current = current.next
-		if *current.value == value {
+		if current.value == value {
 			return current.key, nil
 		}
 	}
@@ -190,7 +191,7 @@ func (d *DoublyLinkedList) ToArray() ([]*interface{}, error) {
 	var i int
 	for *current.next != *d.tail {
 		current = current.next
-		ret[i] = current.value
+		ret[i] = &current.value
 		i++
 	}
 	return ret, nil
@@ -205,7 +206,7 @@ func (d *DoublyLinkedList) String() string {
 	str += "head<->"
 	for *current.next != *d.tail {
 		current = current.next
-		str += fmt.Sprintf("%v<->", *current.value)
+		str += fmt.Sprintf("%v<->", current.value)
 	}
 	str += "tail }"
 	return str
