@@ -24,7 +24,8 @@ type DoublyLinkedList struct {
 	len  int
 }
 
-// Insert an item to the end of the list, just before the tail
+// Insert ...
+//   insert an item to the end of the list, just before the tail
 // Example:
 //    list.Insert(2, "item")
 func (d *DoublyLinkedList) Insert(key int, value interface{}) {
@@ -60,7 +61,8 @@ func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 	}
 }
 
-// Remove the last item from the list
+// Pop ...
+//   remove the last item from the list, returns the value
 // Example:
 //   el, err := list.Pop()
 //   if err != nil {
@@ -78,7 +80,8 @@ func (d *DoublyLinkedList) Pop() (interface{}, error) {
 	return value, nil
 }
 
-// Remove an item from the front of the list
+// Shift ...
+//   remove an item from the front of the list, returns the value
 // Example:
 //    el, err := list.Shift()
 //   if err != nil {
@@ -96,7 +99,8 @@ func (d *DoublyLinkedList) Shift() (interface{}, error) {
 	return value, nil
 }
 
-// Iterate over the list, head to tail
+// Iter ...
+//   iterate over the list, head to tail
 // Example:
 //   for i := range list.Iter() {
 //     // do stuff
@@ -114,7 +118,8 @@ func (d *DoublyLinkedList) Iter() chan *interface{} {
 	return ch
 }
 
-// Iterate over the list, tail to head
+// IterReverse ...
+//   iterate over the list, tail to head
 // Example:
 //   for i := range list.IterReverse() {
 //     // do stuff
@@ -132,14 +137,16 @@ func (d *DoublyLinkedList) IterReverse() chan *interface{} {
 	return ch
 }
 
-// Get the length of the list (number of items)
+// Len ...
+//   get the length of the list (number of items)
 // Example:
 //   var l int = list.Len()
 func (d *DoublyLinkedList) Len() int {
 	return d.len
 }
 
-// Remove an element by with its key
+// Remove ...
+//   remove a specific element by its key
 // Example:
 //   list.Remove(1)
 func (d *DoublyLinkedList) Remove(key int) (interface{}, error) {
@@ -159,9 +166,10 @@ func (d *DoublyLinkedList) Remove(key int) (interface{}, error) {
 	return nil, errors.New("Value not found")
 }
 
-// Find the index of a value given the value
+// Find ...
+//  find the key of a value in the list
 // Example:
-//   index, err := list.Find("item")
+//   key, err := list.Find("item")
 //   if err != nil {
 //     // log error
 //   }
@@ -179,7 +187,8 @@ func (d *DoublyLinkedList) Find(value interface{}) (int, error) {
 	return -1, errors.New(fmt.Sprintf("Cannot find '%v'", value))
 }
 
-// Return the list as an array
+// ToArray ...
+//   returns the list as an array of []*interface{}
 // Example:
 //   arr, err := list.ToArray()
 func (d *DoublyLinkedList) ToArray() ([]*interface{}, error) {
@@ -197,7 +206,8 @@ func (d *DoublyLinkedList) ToArray() ([]*interface{}, error) {
 	return ret, nil
 }
 
-// Get a string representation of the linked list (works best with basic types)
+// String ...
+//  returns a string representation of the linked list (works best with basic types)
 // Example:
 //   var str string = list.String()
 func (d *DoublyLinkedList) String() string {
