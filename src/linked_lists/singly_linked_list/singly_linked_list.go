@@ -7,7 +7,7 @@ import (
 
 type link struct {
 	key   int
-	value *interface{}
+	value interface{}
 	next  *link
 }
 
@@ -26,24 +26,24 @@ type SinglyLinkedList struct {
 //    list.Insert(2, "item")
 func (s *SinglyLinkedList) Insert(key int, value interface{}) {
 	if s.head == nil { // if list empty create head, append after head
-		s.head = &link{key: -1, next: &link{key: key, value: &value}}
+		s.head = &link{key: -1, next: &link{key: key, value: value}}
 		s.len++
 
 	} else { // find the correct spot
 		var current *link = s.head
 		for current.next != nil {
 			if (*current.next).key == key { // keys match update value
-				(*current.next).value = &value
+				(*current.next).value = value
 				return
 
 			} else if (*(*current).next).key > key { // next key larger, place before
-				current.next = &link{key: key, value: &value, next: current.next}
+				current.next = &link{key: key, value: value, next: current.next}
 				s.len++
 				return
 			}
 			current = (*current).next
 		}
-		(*current).next = &link{key: key, value: &value}
+		(*current).next = &link{key: key, value: value}
 		s.len++
 	}
 }
@@ -62,8 +62,8 @@ func (s *SinglyLinkedList) Pop() (interface{}, error) {
 	for current.next.next != nil {
 		current = current.next
 	}
-	// var value interface{} = *(*(*current).next).value
-	var value interface{} = *current.next.value
+	// var value interface{} = (*(*current).next).value
+	var value interface{} = current.next.value
 	current.next = nil
 	s.len--
 	return value, nil
@@ -79,7 +79,7 @@ func (s *SinglyLinkedList) Shift() (interface{}, error) {
 	if s.head == nil {
 		return nil, errors.New("Is empty")
 	}
-	var value interface{} = *s.head.next.value
+	var value interface{} = s.head.next.value
 	s.head.next = s.head.next.next
 	s.len--
 	return value, nil
@@ -96,7 +96,7 @@ func (s *SinglyLinkedList) Iter() chan *interface{} {
 		var current *link = s.head
 		for current.next != nil {
 			current = current.next
-			ch <- current.value
+			ch <- &current.value
 		}
 		close(ch)
 	}()
@@ -120,7 +120,7 @@ func (s *SinglyLinkedList) Remove(key int) (interface{}, error) {
 	var current *link = s.head
 	for current.next != nil {
 		if current.next.key == key {
-			var value interface{} = *current.next.value
+			var value interface{} = current.next.value
 			current.next = current.next.next
 			s.len--
 			return value, nil
@@ -143,7 +143,7 @@ func (s *SinglyLinkedList) Find(value interface{}) (int, error) {
 	var current *link = s.head
 	for current.next != nil {
 		current = current.next
-		if *current.value == value {
+		if current.value == value {
 			return current.key, nil
 		}
 	}
@@ -162,7 +162,7 @@ func (s *SinglyLinkedList) ToArray() ([]interface{}, error) {
 	var i int
 	for current.next != nil {
 		current = current.next
-		ret[i] = *current.value
+		ret[i] = current.value
 		i++
 	}
 	return ret, nil
@@ -177,7 +177,7 @@ func (s *SinglyLinkedList) String() string {
 	str += "head->"
 	for current.next != nil {
 		current = current.next
-		str += fmt.Sprintf("%v->", *current.value)
+		str += fmt.Sprintf("%v->", current.value)
 	}
 	str += "tail }"
 	return str
