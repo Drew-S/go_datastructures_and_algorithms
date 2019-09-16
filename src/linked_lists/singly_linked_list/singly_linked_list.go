@@ -11,19 +11,18 @@ type link struct {
 	next  *link
 }
 
-// Singly Linked List of elements
-// head -> item 1 -> item 2 -> ... -> tail
-// Can store any type of item.
-// Example:
-//   list := SinglyLinkedList{}
+type keyValuePair struct {
+	key int
+	value interface{}
+}
+
+// SinglyLinkedList holds a list of any mix of items
 type SinglyLinkedList struct {
 	head *link
 	len  int
 }
 
-// Insert an item to the end of the list, just before the tail
-// Example:
-//    list.Insert(2, "item")
+// Insert an item into the list as key, value
 func (s *SinglyLinkedList) Insert(key int, value interface{}) {
 	if s.head == nil { // if list empty create head, append after head
 		s.head = &link{key: -1, next: &link{key: key, value: value}}
@@ -48,12 +47,7 @@ func (s *SinglyLinkedList) Insert(key int, value interface{}) {
 	}
 }
 
-// Remove the last item from the list
-// Example:
-//   el, err := list.Pop()
-//   if err != nil {
-//     // log error
-//   }
+// Pop, removes and returns the last item from the list
 func (s *SinglyLinkedList) Pop() (interface{}, error) {
 	if s.head == nil {
 		return nil, errors.New("Is empty")
@@ -62,19 +56,13 @@ func (s *SinglyLinkedList) Pop() (interface{}, error) {
 	for current.next.next != nil {
 		current = current.next
 	}
-	// var value interface{} = (*(*current).next).value
 	var value interface{} = current.next.value
 	current.next = nil
 	s.len--
 	return value, nil
 }
 
-// Remove an item from the front of the list
-// Example:
-//    el, err := list.Shift()
-//   if err != nil {
-//     // log error
-//   }
+// Shift, removes and returns the first item from the list
 func (s *SinglyLinkedList) Shift() (interface{}, error) {
 	if s.head == nil {
 		return nil, errors.New("Is empty")
@@ -85,11 +73,7 @@ func (s *SinglyLinkedList) Shift() (interface{}, error) {
 	return value, nil
 }
 
-// Iterate over the list,
-// Example:
-//   for i := range list.Iter() {
-//     // do stuff
-//   }
+// Iter loops over the entire list
 func (s *SinglyLinkedList) Iter() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -103,16 +87,12 @@ func (s *SinglyLinkedList) Iter() chan *interface{} {
 	return ch
 }
 
-// Get the length of the list (number of items)
-// Example:
-//   var l int = list.Len()
+// Len returns the number of items in the list
 func (s *SinglyLinkedList) Len() int {
 	return s.len
 }
 
-// Remove an element by with its key
-// Example:
-//   list.Remove(1)
+// Remove an item from the list by its key
 func (s *SinglyLinkedList) Remove(key int) (interface{}, error) {
 	if s.head == nil {
 		return nil, errors.New("Empty list")
@@ -130,12 +110,7 @@ func (s *SinglyLinkedList) Remove(key int) (interface{}, error) {
 	return nil, errors.New("Value not found")
 }
 
-// Find the index of a value given the value
-// Example:
-//   index, err := list.Find("item")
-//   if err != nil {
-//     // log error
-//   }
+// Find the first matching key for a value in the list
 func (s *SinglyLinkedList) Find(value interface{}) (int, error) {
 	if s.head == nil {
 		return -1, errors.New("Is empty")
@@ -150,28 +125,27 @@ func (s *SinglyLinkedList) Find(value interface{}) (int, error) {
 	return -1, errors.New(fmt.Sprintf("Cannot find '%v'", value))
 }
 
-// Return the list as an array
-// Example:
-//   arr, err := list.ToArray()
-func (s *SinglyLinkedList) ToArray() ([]interface{}, error) {
+// ToArray returns an array of items in order of head->item->...->tail
+func (s *SinglyLinkedList) ToArray() ([]keyValuePair, error) {
 	if s.head == nil {
-		return []interface{}{}, errors.New("Is empty")
+		return []keyValuePair{}, errors.New("Is empty")
 	}
-	ret := make([]interface{}, s.len)
+	ret := make([]keyValuePair, s.len)
 	var current *link = s.head
 	var i int
 	for current.next != nil {
 		current = current.next
-		ret[i] = current.value
+		ret[i] = keyValuePair{
+			key: current.key,
+			value: current.value,
+		}
 		i++
 	}
 	return ret, nil
 }
 
-// Get a string representation of the linked list (works best with basic types)
-// Example:
-//   var str string = list.String()
-func (s *SinglyLinkedList) String() string {
+// Sprint returns a string representation of the list
+func (s *SinglyLinkedList) Sprint() string {
 	var str string = "SinglyLinkedList{ "
 	var current *link = s.head
 	str += "head->"
