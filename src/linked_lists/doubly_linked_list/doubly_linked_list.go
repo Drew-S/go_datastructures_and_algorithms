@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+type keyValuePair struct {
+	key int
+	value interface{}
+}
+
 type link struct {
 	key   int
 	value interface{}
@@ -12,22 +17,14 @@ type link struct {
 	prev  *link
 }
 
-// DoublyLinkedList ...
-//   Create a linked list of any (mix) of items
-// head <-> item 1 <-> item 2 <-> ... <-> tail
-// Can store any type of item.
-// Example:
-//   list := DoublyLinkedList{}
+// DoublyLinkedList holds a list of any mix of items
 type DoublyLinkedList struct {
 	head *link
 	tail *link
 	len  int
 }
 
-// Insert ...
-//   insert an item to the end of the list, just before the tail
-// Example:
-//    list.Insert(2, "item")
+// Insert an item into the list as key, value
 func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 	if d.head == nil { // if list empty create head, append after head
 		d.tail = &link{key: -1}
@@ -61,13 +58,7 @@ func (d *DoublyLinkedList) Insert(key int, value interface{}) {
 	}
 }
 
-// Pop ...
-//   remove the last item from the list, returns the value
-// Example:
-//   el, err := list.Pop()
-//   if err != nil {
-//     // log error
-//   }
+// Pop, removes and returns the last item from the list
 func (d *DoublyLinkedList) Pop() (interface{}, error) {
 	if d.tail == nil {
 		return nil, errors.New("Is empty")
@@ -80,13 +71,7 @@ func (d *DoublyLinkedList) Pop() (interface{}, error) {
 	return value, nil
 }
 
-// Shift ...
-//   remove an item from the front of the list, returns the value
-// Example:
-//    el, err := list.Shift()
-//   if err != nil {
-//     // log error
-//   }
+// Shift, removes and returns the first item from the list
 func (d *DoublyLinkedList) Shift() (interface{}, error) {
 	if d.head == nil {
 		return nil, errors.New("Is empty")
@@ -99,12 +84,7 @@ func (d *DoublyLinkedList) Shift() (interface{}, error) {
 	return value, nil
 }
 
-// Iter ...
-//   iterate over the list, head to tail
-// Example:
-//   for i := range list.Iter() {
-//     // do stuff
-//   }
+// Iter loops over the entire list, head to tail
 func (d *DoublyLinkedList) Iter() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -118,12 +98,7 @@ func (d *DoublyLinkedList) Iter() chan *interface{} {
 	return ch
 }
 
-// IterReverse ...
-//   iterate over the list, tail to head
-// Example:
-//   for i := range list.IterReverse() {
-//     // do stuff
-//   }
+// IterReverse loops over the entire list, head to tail
 func (d *DoublyLinkedList) IterReverse() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -137,18 +112,12 @@ func (d *DoublyLinkedList) IterReverse() chan *interface{} {
 	return ch
 }
 
-// Len ...
-//   get the length of the list (number of items)
-// Example:
-//   var l int = list.Len()
+// Len returns the number of items in the list
 func (d *DoublyLinkedList) Len() int {
 	return d.len
 }
 
-// Remove ...
-//   remove a specific element by its key
-// Example:
-//   list.Remove(1)
+// Remove an item from the list by its key
 func (d *DoublyLinkedList) Remove(key int) (interface{}, error) {
 	if d.head == nil {
 		return nil, errors.New("Empty list")
@@ -166,13 +135,7 @@ func (d *DoublyLinkedList) Remove(key int) (interface{}, error) {
 	return nil, errors.New("Value not found")
 }
 
-// Find ...
-//  find the key of a value in the list
-// Example:
-//   key, err := list.Find("item")
-//   if err != nil {
-//     // log error
-//   }
+// Find the first matching key for a value in the list
 func (d *DoublyLinkedList) Find(value interface{}) (int, error) {
 	if d.head == nil {
 		return -1, errors.New("Is empty")
@@ -187,30 +150,27 @@ func (d *DoublyLinkedList) Find(value interface{}) (int, error) {
 	return -1, errors.New(fmt.Sprintf("Cannot find '%v'", value))
 }
 
-// ToArray ...
-//   returns the list as an array of []*interface{}
-// Example:
-//   arr, err := list.ToArray()
-func (d *DoublyLinkedList) ToArray() ([]*interface{}, error) {
+// ToArray returns an array of items in order of head<->item<->...<->tail
+func (d *DoublyLinkedList) ToArray() ([]keyValuePair{}, error) {
 	if d.head == nil {
-		return []*interface{}{}, errors.New("Is empty")
+		return []keyValuePair{}{}, errors.New("Is empty")
 	}
-	ret := make([]*interface{}, d.len)
+	ret := make([]keyValuePair{}, d.len)
 	var current *link = d.head
 	var i int
 	for *current.next != *d.tail {
 		current = current.next
-		ret[i] = &current.value
+		ret[i] = keyValuePair{
+			key: current.key,
+			value: current.value,
+		}
 		i++
 	}
 	return ret, nil
 }
 
-// String ...
-//  returns a string representation of the linked list (works best with basic types)
-// Example:
-//   var str string = list.String()
-func (d *DoublyLinkedList) String() string {
+// Sprint returns a string representation of the list
+func (d *DoublyLinkedList) Sprint() string {
 	var str string = "DoublyLinkedList{ "
 	var current *link = d.head
 	str += "head<->"
