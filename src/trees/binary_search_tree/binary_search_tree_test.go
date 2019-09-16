@@ -39,7 +39,7 @@ func Test_Insert1(t *testing.T) {
 		t.Errorf("Expected root to not be nil, got '%v'", b.root)
 	}
 	if b.root.value != 4 {
-		t.Errorf("Expected root.value == 'test', got '%v'", b.root.value)
+		t.Errorf("Expected root.value to be 'test', got '%v'", b.root.value)
 	}
 	if b.len != 1 {
 		t.Errorf("Expected len to be 1, got '%v'", b.len)
@@ -55,13 +55,13 @@ func Test_Insert2(t *testing.T) {
 		t.Errorf("Expected root to not be nil, got '%v'", b.root)
 	}
 	if b.root.value != "test" {
-		t.Errorf("Expected root.value == 'test', got '%v'", b.root.value)
+		t.Errorf("Expected root.value to be 'test', got '%v'", b.root.value)
 	}
 	if b.root.right.value != "test2" {
-		t.Errorf("Expected root.right.value == 'test2', got '%v'", b.root.right.value)
+		t.Errorf("Expected root.right.value to be 'test2', got '%v'", b.root.right.value)
 	}
 	if b.root.left.value != "test3" {
-		t.Errorf("Expected root.left.value == 'test3', got '%v'", b.root.left.value)
+		t.Errorf("Expected root.left.value to be 'test3', got '%v'", b.root.left.value)
 	}
 	if b.len != 3 {
 		t.Errorf("Expected len to be 3, got '%v'", b.len)
@@ -78,16 +78,16 @@ func Test_Insert3(t *testing.T) {
 		t.Errorf("Expected root to not be nil, got '%v'", b.root)
 	}
 	if b.root.value != "test" {
-		t.Errorf("Expected root.value == 'test', got '%v'", b.root.value)
+		t.Errorf("Expected root.value to be 'test', got '%v'", b.root.value)
 	}
 	if b.root.right.value != "test2" {
-		t.Errorf("Expected root.right.value == 'test2', got '%v'", b.root.right.value)
+		t.Errorf("Expected root.right.value to be 'test2', got '%v'", b.root.right.value)
 	}
 	if b.root.left.value != "test3" {
-		t.Errorf("Expected root.left.value == 'test3', got '%v'", b.root.left.value)
+		t.Errorf("Expected root.left.value to be 'test3', got '%v'", b.root.left.value)
 	}
 	if b.root.left.right.value != "test4" {
-		t.Errorf("Expected root.left.right.value == 'test3', got '%v'", b.root.left.right.value)
+		t.Errorf("Expected root.left.right.value to be 'test3', got '%v'", b.root.left.right.value)
 	}
 	if b.len != 4 {
 		t.Errorf("Expected len to be 4, got '%v'", b.len)
@@ -443,13 +443,5 @@ func Test_IterInorder(t *testing.T) {
 			t.Errorf("Expected to get '%d', got '%v'", l[j], *i)
 		}
 		j++
-	}
-}
-
-func Test_Sprint(t *testing.T) {
-	b := buildTestTree()
-	var str string = "BinarySearchTree{ 1->2->3->4->5->6->7 }"
-	if b.Sprint() != str {
-		t.Errorf("Expected to get '%s', got '%v'", str, b.Sprint())
 	}
 }

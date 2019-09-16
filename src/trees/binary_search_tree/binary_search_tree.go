@@ -122,11 +122,13 @@ func (n *node) inorder(ch chan *interface{}) {
 	}
 }
 
+// BinarySearchTree stores items in a tree as key, value pair
 type BinarySearchTree struct {
 	root *node
 	len  int
 }
 
+// Insert a new item into the tree
 func (b *BinarySearchTree) Insert(key int, value interface{}) {
 	if b.root == nil {
 		b.root = &node{key: key, value: value}
@@ -136,6 +138,7 @@ func (b *BinarySearchTree) Insert(key int, value interface{}) {
 	}
 }
 
+// Delete an item from the tree by the key
 func (b *BinarySearchTree) Delete(key int) (interface{}, error) {
 	if b.root == nil {
 		return nil, errors.New("Tree is empty")
@@ -152,6 +155,7 @@ func (b *BinarySearchTree) Delete(key int) (interface{}, error) {
 	return value, nil
 }
 
+// Iterate over the items with pre order
 func (b *BinarySearchTree) IterPreorder() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -161,6 +165,7 @@ func (b *BinarySearchTree) IterPreorder() chan *interface{} {
 	return ch
 }
 
+// Iterate over the items with post order
 func (b *BinarySearchTree) IterPostorder() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -170,6 +175,7 @@ func (b *BinarySearchTree) IterPostorder() chan *interface{} {
 	return ch
 }
 
+// Iterate over the items in order (low to high key)
 func (b *BinarySearchTree) IterInorder() chan *interface{} {
 	ch := make(chan *interface{})
 	go func() {
@@ -177,13 +183,4 @@ func (b *BinarySearchTree) IterInorder() chan *interface{} {
 		close(ch)
 	}()
 	return ch
-}
-
-// Converts to a string, uses in order
-func (b *BinarySearchTree) Sprint() string {
-	var str string = "BinarySearchTree{ "
-	for i := range b.IterInorder() {
-		str += fmt.Sprintf("%v->", *i)
-	}
-	return str[0:len(str)-2] + " }"
 }
