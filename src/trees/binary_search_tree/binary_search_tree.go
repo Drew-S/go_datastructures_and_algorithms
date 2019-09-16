@@ -2,7 +2,6 @@ package binarysearchtree
 
 import (
 	"errors"
-	"fmt"
 )
 
 type node struct {

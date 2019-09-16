@@ -235,11 +235,13 @@ func Test_ToArray(t *testing.T) {
 	if err != nil {
 		t.Errorf("Expected error to be nil, got '%v'", err)
 	}
-	if *a[0] != "test1" {
-		t.Errorf("Expected arr[0] to be 'test1', got '%v'", *a[0])
+	if a[0].value != "test1" || a[0].key != 0 {
+		t.Errorf("Expected arr[0].value to be 'test1', got '%v'", a[0].value)
+		t.Errorf("Expected arr[0].key to be 0, got '%v'", a[0].key)
 	}
-	if *a[1] != "test2" {
-		t.Errorf("Expected arr[1] to be 'test2', got '%v'", *a[1])
+	if a[1].value != "test2" || a[1].key != 1 {
+		t.Errorf("Expected arr[1].value to be 'test2', got '%v'", a[1].value)
+		t.Errorf("Expected arr[1].key to be 1, got '%v'", a[1].key)
 	}
 }
 
@@ -257,6 +259,6 @@ func Test_Sprint(t *testing.T) {
 	l.Insert(1, "test2")
 	var output string = "DoublyLinkedList{ head<->test1<->test2<->tail }"
 	if l.Sprint() != output {
-		t.Errorf("Expected '%s', got '%v'", output, l.String())
+		t.Errorf("Expected '%s', got '%v'", output, l.Sprint())
 	}
 }

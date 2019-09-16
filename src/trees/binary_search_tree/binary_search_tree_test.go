@@ -1,7 +1,6 @@
 package binarysearchtree
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -339,7 +338,6 @@ func Test_Delete8(t *testing.T) {
 	b.Insert(1, 1)
 	b.Insert(4, 4)
 	v, err := b.Delete(2)
-	fmt.Println(b.Sprint())
 	if err != nil {
 		t.Errorf("Expected error to be nil, got '%v'", err)
 	}

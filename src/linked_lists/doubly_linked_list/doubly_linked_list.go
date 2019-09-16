@@ -6,7 +6,7 @@ import (
 )
 
 type keyValuePair struct {
-	key int
+	key   int
 	value interface{}
 }
 
@@ -151,17 +151,17 @@ func (d *DoublyLinkedList) Find(value interface{}) (int, error) {
 }
 
 // ToArray returns an array of items in order of head<->item<->...<->tail
-func (d *DoublyLinkedList) ToArray() ([]keyValuePair{}, error) {
+func (d *DoublyLinkedList) ToArray() ([]keyValuePair, error) {
 	if d.head == nil {
-		return []keyValuePair{}{}, errors.New("Is empty")
+		return []keyValuePair{}, errors.New("Is empty")
 	}
-	ret := make([]keyValuePair{}, d.len)
+	ret := make([]keyValuePair, d.len)
 	var current *link = d.head
 	var i int
 	for *current.next != *d.tail {
 		current = current.next
 		ret[i] = keyValuePair{
-			key: current.key,
+			key:   current.key,
 			value: current.value,
 		}
 		i++
